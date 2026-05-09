@@ -1,0 +1,92 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  background: #121212;
+  color: white;
+  font-family: sans-serif;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.drop-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  border: 2px dashed #666;
+  border-radius: 16px;
+  background: #1e1e1e;
+  cursor: pointer;
+  transition: 0.2s;
+  text-align: center;
+  padding: 20px;
+}
+
+.drop-area:hover {
+  border-color: #4da3ff;
+}
+
+.controls {
+  margin-top: 20px;
+  display: flex;
+  gap: 12px;
+}
+
+select,
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+select {
+  flex: 1;
+  background: #2a2a2a;
+  color: white;
+}
+
+button {
+  background: #4da3ff;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+#fileList {
+  margin-top: 20px;
+  background: #1e1e1e;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.file-item {
+  padding: 10px;
+  border-bottom: 1px solid #333;
+}
+
+#status {
+  margin-top: 16px;
+  color: #7dff9b;
+}
+
+@media (max-width: 700px) {
+  .controls {
+    flex-direction: column;
+  }
+}
