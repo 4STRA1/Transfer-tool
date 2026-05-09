@@ -1,55 +1,139 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
   <title>画像変換ツール</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="style.css"
+  />
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
 </head>
+
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <h1>画像変換ツール</h1>
+  <h1>画像変換ツール</h1>
 
-    <label class="drop-area" id="dropArea">
-      <input type="file" id="fileInput" multiple accept="image/*,.pdf" hidden>
-      <p>ファイルをドロップ / タップして選択</p>
-    </label>
+  <!-- ドロップエリア -->
+  <label
+    class="drop-area"
+    id="dropArea"
+  >
 
-    <div class="save-location">
-  <button class="folder-btn" id="selectFolderBtn">
-    保存先フォルダを選択
-  </button>
+    <input
+      type="file"
+      id="fileInput"
+      multiple
+      webkitdirectory
+      directory
+      accept="image/*,.pdf"
+      hidden
+    >
 
-  <div class="save-path" id="savePath">
-    保存先: 未選択
-  </div>
-</div>
+    <div class="drop-content">
 
-<div class="controls">
-      <select id="formatSelect">
-        <option value="png">PNG</option>
-        <option value="jpeg">JPEG</option>
-        <option value="webp">WEBP</option>
-        <option value="pdf">PDF</option>
-      </select>
+      <div class="drop-icon">
+        📁
+      </div>
 
-      <button id="convertBtn">変換開始</button>
+      <div class="drop-text">
+        ファイル / フォルダを追加
+      </div>
+
+      <div class="drop-sub">
+        ドラッグ＆ドロップ対応
+      </div>
+
     </div>
 
-    <div id="fileList"></div>
+  </label>
 
-    <div id="status"></div>
+  <!-- 保存先 -->
+  <div class="save-location">
+
+    <button
+      class="folder-btn"
+      id="selectFolderBtn"
+    >
+      保存先フォルダを選択
+    </button>
+
+    <div
+      class="save-path"
+      id="savePath"
+    >
+      保存先: 未選択
+    </div>
 
   </div>
 
-  <script src="script.js"></script>
+  <!-- コントロール -->
+  <div class="controls">
+
+    <select id="formatSelect">
+
+      <option value="png">
+        PNG
+      </option>
+
+      <option value="jpeg">
+        JPEG
+      </option>
+
+      <option value="webp">
+        WEBP
+      </option>
+
+      <option value="pdf">
+        PDF
+      </option>
+
+    </select>
+
+    <button id="convertBtn">
+      変換開始
+    </button>
+
+  </div>
+
+  <!-- プレビュー -->
+  <div id="previewGrid"></div>
+
+  <!-- 進行バー -->
+  <div class="progress-wrapper">
+
+    <div
+      class="progress-bar"
+      id="progressBar"
+    ></div>
+
+  </div>
+
+  <!-- 状態 -->
+  <div id="status"></div>
+
+</div>
+
+<script src="script.js"></script>
+
 </body>
 </html>
