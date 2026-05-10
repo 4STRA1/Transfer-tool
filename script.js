@@ -23,26 +23,26 @@ let files = [];
 let results = [];
 let downloadCompleted = false;
 
-// ---------------------
-// ファイル追加
-// ---------------------
-fileInput.addEventListener('change', e => {
-  addFiles(e.target.files);
-});
-
+// ----------------------
+// 追加
+// ----------------------
 dropArea.addEventListener('click', () => {
   fileInput.click();
 });
 
+fileInput.addEventListener('change', e => {
+  addFiles(e.target.files);
+});
+
 function addFiles(list) {
   files = [...files, ...list];
-  renderFiles();
+  render();
 }
 
-// ---------------------
+// ----------------------
 // プレビュー
-// ---------------------
-function renderFiles() {
+// ----------------------
+function render() {
   
   previewGrid.innerHTML = '';
   
@@ -52,22 +52,21 @@ function renderFiles() {
     card.className = 'preview-card';
     
     const img = document.createElement('img');
-    img.className = 'preview-image';
     
-    const reader = new FileReader();
-    reader.onload = e => img.src = e.target.result;
-    reader.readAsDataURL(file);
+    const fr = new FileReader();
+    fr.onload = e => img.src = e.target.result;
+    fr.readAsDataURL(file);
     
     card.appendChild(img);
     
     // 削除
     const btn = document.createElement('button');
-    btn.className = 'remove-btn';
     btn.textContent = '×';
+    btn.className = 'remove-btn';
     
     btn.onclick = () => {
       files.splice(i, 1);
-      renderFiles();
+      render();
     };
     
     card.appendChild(btn);
@@ -76,9 +75,9 @@ function renderFiles() {
   });
 }
 
-// ---------------------
+// ----------------------
 // 変換
-// ---------------------
+// ----------------------
 convertBtn.addEventListener('click', async () => {
   
   results = [];
@@ -96,40 +95,48 @@ convertBtn.addEventListener('click', async () => {
   
   for (let i = 0; i < files.length; i++) {
     
-    const file = files[i];
+    const blob = await convert(files[i], format, mergedPdf, i);
     
-    const data = await file.arrayBuffer();
-    
-    const imgBlob = await process(file, format, mergedPdf, i);
-    
-    const name = file.name.replace(/\.[^/.]+$/, '') + '.' + format;
-    
-    results.push({
-      blob: imgBlob,
-      name
-    });
-    
-    zip.file(name, imgBlob);
+    // PDF以外のみ
+    if (blob) {
+      
+      const name =
+        files[i].name.replace(/\.[^/.]+$/, '') +
+        '.' + format;
+      
+      results.push({
+        blob,
+        name
+      });
+      
+      zip.file(name, blob);
+    }
     
     progressBar.style.width =
       ((i + 1) / files.length * 100) + '%';
+    
   }
   
-  // PDF結合
   if (format === 'pdf') {
+    
     const pdfBlob = mergedPdf.output('blob');
+    
     zip.file('merged.pdf', pdfBlob);
-    results.push({ blob: pdfBlob, name: 'merged.pdf' });
+    
+    results.push({
+      blob: pdfBlob,
+      name: 'merged.pdf'
+    });
   }
   
   showResult();
   
 });
 
-// ---------------------
-// 変換処理
-// ---------------------
-async function process(file, format, mergedPdf, index) {
+// ----------------------
+// 変換処理（修正版）
+// ----------------------
+async function convert(file, format, mergedPdf, index) {
   
   const img = new Image();
   
@@ -154,32 +161,49 @@ async function process(file, format, mergedPdf, index) {
   
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
   
+  // PDF結合
   if (format === 'pdf') {
     
     const imgData = canvas.toDataURL('image/jpeg', 0.9);
     
     if (index > 0) mergedPdf.addPage();
     
-    mergedPdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
+    mergedPdf.addImage(
+      imgData,
+      'JPEG',
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
     
-    return canvas.toDataURL('image/jpeg');
-    
+    return null;
   }
   
-  return await new Promise(r => {
-    canvas.toBlob(b => r(b), 'image/' + format, 0.9);
+  // 画像変換（重要：Blob統一）
+  return await new Promise(resolve => {
+    
+    let mime =
+      format === 'jpg' ? 'image/jpeg' :
+      'image/' + format;
+    
+    canvas.toBlob(blob => {
+      resolve(blob);
+    }, mime, 0.9);
+    
   });
+  
 }
 
-// ---------------------
+// ----------------------
 // 結果画面
-// ---------------------
+// ----------------------
 function showResult() {
   
-  document.getElementById('resultPanel').classList.remove('hidden');
+  document.getElementById('resultPanel')
+    .classList.remove('hidden');
   
   const list = document.getElementById('resultList');
-  
   list.innerHTML = '';
   
   results.forEach((r, i) => {
@@ -205,13 +229,14 @@ function showResult() {
     div.appendChild(btn);
     
     list.appendChild(div);
+    
   });
   
 }
 
-// ---------------------
+// ----------------------
 // ダウンロード
-// ---------------------
+// ----------------------
 function download(item) {
   
   const url = URL.createObjectURL(item.blob);
@@ -224,13 +249,13 @@ function download(item) {
   URL.revokeObjectURL(url);
   
   downloadCompleted = true;
-  
   document.getElementById('backBtn').disabled = false;
+  
 }
 
-// ---------------------
+// ----------------------
 // 全DL
-// ---------------------
+// ----------------------
 document.getElementById('downloadAllBtn')
   .addEventListener('click', () => {
     
@@ -241,12 +266,13 @@ document.getElementById('downloadAllBtn')
     
   });
 
-// ---------------------
+// ----------------------
 // 戻る
-// ---------------------
+// ----------------------
 document.getElementById('backBtn')
   .addEventListener('click', () => {
     
-    document.getElementById('resultPanel').classList.add('hidden');
+    document.getElementById('resultPanel')
+      .classList.add('hidden');
     
   });

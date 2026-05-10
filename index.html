@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,22 +21,18 @@
 
 <h1>画像変換ツール</h1>
 
-<!-- アップロード -->
-<label class="drop-area" id="dropArea">
-
+<!-- ドロップ -->
+<div id="dropArea" class="drop-area">
 <input type="file" id="fileInput" multiple accept="image/*,.pdf" hidden>
 
-<div class="drop-content">
-<div class="drop-icon">📁</div>
-<div class="drop-text">ファイルを追加</div>
-<div class="drop-sub">複数選択対応</div>
+<div class="drop-box">
+📁 クリック or ドロップ
 </div>
 
-</label>
+</div>
 
 <!-- 設定 -->
 <div class="controls">
-
 <select id="formatSelect">
 <option value="png">PNG</option>
 <option value="jpeg">JPEG</option>
@@ -45,16 +40,15 @@
 <option value="pdf">PDF</option>
 </select>
 
-<button id="convertBtn">変換開始</button>
-
+<button id="convertBtn">変換</button>
 </div>
 
 <!-- プレビュー -->
 <div id="previewGrid"></div>
 
-<!-- 進行 -->
-<div class="progress-wrapper">
-<div class="progress-bar" id="progressBar"></div>
+<!-- 進捗 -->
+<div class="progress">
+<div id="progressBar"></div>
 </div>
 
 <div id="status"></div>
@@ -62,14 +56,14 @@
 </div>
 
 <!-- 結果画面 -->
-<div id="resultPanel" class="result-panel hidden">
+<div id="resultPanel" class="hidden">
 
 <h2>変換結果</h2>
 
 <div id="resultList"></div>
 
-<button id="downloadAllBtn">全てダウンロード</button>
-<button id="backBtn" disabled>元の画面に戻る</button>
+<button id="downloadAllBtn">全ダウンロード</button>
+<button id="backBtn" disabled>戻る</button>
 
 </div>
 
