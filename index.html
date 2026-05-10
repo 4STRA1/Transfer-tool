@@ -4,56 +4,97 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>画像変換ツール</title>
+<title>画像形式変換ツール</title>
 
 <link rel="stylesheet" href="style.css">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#121212">
 
 </head>
 
+<!-- 画像拡大モーダル -->
+<div id="imageModal">
+  
+  <button id="modalClose">×</button>
+  
+  <img id="modalImage">
+  
+</div>
+
 <body>
 
-<div class="container">
+<!-- 変換画面 -->
+<div class="app">
 
-<h1>画像変換ツール</h1>
+<h1>画像形式変換ツール</h1>
 
-<!-- ドロップ -->
 <div id="dropArea" class="drop-area">
-<input type="file" id="fileInput" multiple accept="image/*,.pdf" hidden>
-
-<div class="drop-box">
-📁 クリック or ドロップ
+<input type="file" id="fileInput" multiple accept="image/*" hidden>
+📁 クリック / ドロップ
 </div>
 
+<!-- リネーム -->
+<div class="rename-area">
+<label>リネーム</label>
+
+<input id="renamePrefix" value="image">
+
+<span id="namePreview" class="preview-text"></span>
+
 </div>
 
-<!-- 設定 -->
-<div class="controls">
-<select id="formatSelect">
-<option value="png">PNG</option>
-<option value="jpeg">JPEG</option>
-<option value="webp">WEBP</option>
-<option value="pdf">PDF</option>
-</select>
-
-<button id="convertBtn">変換</button>
+<!-- 設定エリア -->
+<div class="settings-panel">
+  
+  <div class="settings-row">
+    <label>形式</label>
+    
+    <select id="formatSelect">
+      <option value="png">PNG</option>
+      <option value="jpeg">JPEG</option>
+      <option value="webp">WEBP</option>
+      <option value="pdf">PDF</option>
+    </select>
+  </div>
+  
+  <div class="settings-row">
+    <label>リサイズ</label>
+    
+    <select id="resizePreset">
+      <option value="original">元サイズ</option>
+      <option value="512">512px</option>
+      <option value="1024">1024px</option>
+      <option value="1920">1920px</option>
+    </select>
+  </div>
+  
 </div>
 
-<!-- プレビュー -->
-<div id="previewGrid"></div>
+<!-- ボタンエリア -->
+<div class="action-row">
+  
+  <button id="clearAllBtn">
+    全削除
+  </button>
+  
+  <button id="convertBtn">
+    変換
+  </button>
+  
+</div>
 
-<!-- 進捗 -->
 <div class="progress">
 <div id="progressBar"></div>
 </div>
 
-<div id="status"></div>
+<div id="previewGrid"></div>
 
 </div>
+
 
 <!-- 結果画面 -->
 <div id="resultPanel" class="hidden">
@@ -62,10 +103,12 @@
 
 <div id="resultList"></div>
 
-<button id="downloadAllBtn">全ダウンロード</button>
-<button id="backBtn" disabled>戻る</button>
+<button id="downloadAllBtn">全DL</button>
+<button id="backBtn">戻る</button>
 
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <script src="script.js"></script>
 
